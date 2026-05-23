@@ -28,6 +28,13 @@ def _map_order(shopify_order: dict, customer_name: str) -> dict:
             "description": line.get("name", ""),
         })
 
+    # Always add delivery charge
+    items.append({
+        "item_code": "DEL1",
+        "qty": 1,
+        "warehouse": settings.warehouse,
+    })
+
     order_date = shopify_order.get("created_at", "")[:10]
 
     addr = shopify_order.get("shipping_address") or shopify_order.get("billing_address") or {}
