@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "creation": "2026-05-12 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "shopify_section",
+  "shop_name",
+  "client_id",
+  "client_secret",
+  "order_status",
+  "sync_order_limit",
+  "erpnext_section",
+  "company",
+  "warehouse",
+  "sync_section",
+  "enable_order_sync",
+  "enable_price_sync",
+  "enable_stock_sync"
+ ],
+ "fields": [
+  {
+   "fieldname": "shopify_section",
+   "fieldtype": "Section Break",
+   "label": "Shopify Credentials"
+  },
+  {
+   "fieldname": "shop_name",
+   "fieldtype": "Data",
+   "label": "Shop Name",
+   "description": "e.g. silver-stream-distribution (without .myshopify.com)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "client_id",
+   "fieldtype": "Data",
+   "label": "Client ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "client_secret",
+   "fieldtype": "Password",
+   "label": "Client Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "order_status",
+   "fieldtype": "Select",
+   "label": "Order Status to Sync",
+   "options": "open\nany",
+   "default": "open"
+  },
+  {
+   "fieldname": "sync_order_limit",
+   "fieldtype": "Int",
+   "label": "Orders to Fetch Per Run",
+   "default": "50"
+  },
+  {
+   "fieldname": "erpnext_section",
+   "fieldtype": "Section Break",
+   "label": "ERPNext Settings"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sync_section",
+   "fieldtype": "Section Break",
+   "label": "Enable Sync"
+  },
+  {
+   "fieldname": "enable_order_sync",
+   "fieldtype": "Check",
+   "label": "Enable Order Sync",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_price_sync",
+   "fieldtype": "Check",
+   "label": "Enable Price Sync",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_stock_sync",
+   "fieldtype": "Check",
+   "label": "Enable Stock Sync",
+   "default": "1"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-05-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Shopify Integration",
+ "name": "Shopify Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
