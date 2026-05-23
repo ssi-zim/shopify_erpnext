@@ -6,15 +6,11 @@ app_version = "1.0.0"
 app_email = ""
 app_license = "MIT"
 
-# Scheduled tasks
-# Orders sync every 15 minutes
-# Prices and stock sync every hour
+# Scheduled tasks — all sync every 10 minutes
 scheduler_events = {
     "cron": {
-        "*/15 * * * *": [
+        "*/10 * * * *": [
             "shopify_erpnext.sync.orders.sync_orders",
-        ],
-        "0 * * * *": [
             "shopify_erpnext.sync.prices.sync_prices",
             "shopify_erpnext.sync.stock.sync_stock",
         ],
