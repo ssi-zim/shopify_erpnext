@@ -9,7 +9,7 @@ import re
 import requests
 import frappe
 
-SHOPIFY_API_VERSION = "2024-01"
+SHOPIFY_API_VERSION = "2025-01"
 TOKEN_CACHE_KEY = "shopify_erpnext_access_token"
 
 
