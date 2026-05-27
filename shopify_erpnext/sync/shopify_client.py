@@ -29,16 +29,19 @@ def _get_access_token() -> str:
 
     s = _settings()
     url = f"https://{s.shop_name}.myshopify.com/admin/oauth/access_token"
-    response = requests.post(url, json={
-        "client_id": s.client_id,
-        "client_secret": s.get_password("client_secret"),
-        "grant_type": "client_credentials",
-    }, timeout=30)
-    response.raise_for_status()
+    try:
+        response = requests.post(url, json={
+            "client_id": s.client_id,
+            "client_secret": s.get_password("client_secret"),
+            "grant_type": "client_credentials",
+        }, timeout=30)
+        response.raise_for_status()
+    except Exception as e:
+        frappe.log_error(title="Shopify Auth Error", message=str(e))
+        raise
 
     token = response.json().get("access_token")
     frappe.cache().set_value(TOKEN_CACHE_KEY, token, expires_in_sec=82800)  # 23 hours
-    frappe.logger().info("Shopify access token obtained successfully.")
     return token
 
 

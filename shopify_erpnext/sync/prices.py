@@ -30,7 +30,7 @@ def sync_prices():
     try:
         variants = shopify_client.get_all_variants()
     except Exception as e:
-        frappe.logger().error(f"Failed to fetch Shopify variants: {e}")
+        frappe.log_error(title="Shopify Price Sync Error", message=f"Failed to fetch variants: {e}")
         return
 
     for variant in variants:
@@ -42,10 +42,9 @@ def sync_prices():
         new_price = price_map[sku]
         try:
             shopify_client.update_variant_price(variant["id"], new_price)
-            frappe.logger().info(f"Updated price for SKU {sku}: ${new_price}")
             updated += 1
         except Exception as e:
-            frappe.logger().error(f"Failed to update price for SKU {sku}: {e}")
+            frappe.log_error(title="Shopify Price Sync Error", message=f"Failed to update SKU {sku}: {e}")
             failed += 1
 
-    frappe.logger().info(f"Price Sync complete. Updated: {updated}, Skipped: {skipped}, Failed: {failed}")
+    frappe.log_error(title="Shopify Price Sync Complete", message=f"Updated: {updated}, Skipped: {skipped}, Failed: {failed}")

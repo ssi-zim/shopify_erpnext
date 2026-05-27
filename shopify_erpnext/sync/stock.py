@@ -38,7 +38,7 @@ def sync_stock():
         inventory_map = shopify_client.get_inventory_map()
         location_id = shopify_client.get_location_id()
     except Exception as e:
-        frappe.logger().error(f"Failed to fetch Shopify inventory data: {e}")
+        frappe.log_error(title="Shopify Stock Sync Error", message=f"Failed to fetch Shopify inventory data: {e}")
         return
 
     for sku, inventory_item_id in inventory_map.items():
@@ -49,10 +49,9 @@ def sync_stock():
         qty = stock_map[sku]
         try:
             shopify_client.set_inventory_level(location_id, inventory_item_id, qty)
-            frappe.logger().info(f"Stock updated: SKU {sku} = {int(qty)} units")
             updated += 1
         except Exception as e:
-            frappe.logger().error(f"Failed to set inventory for SKU {sku}: {e}")
+            frappe.log_error(title="Shopify Stock Sync Error", message=f"Failed to set inventory for SKU {sku}: {e}")
             failed += 1
 
-    frappe.logger().info(f"Stock Sync complete. Updated: {updated}, Skipped: {skipped}, Failed: {failed}")
+    frappe.log_error(title="Shopify Stock Sync Complete", message=f"Updated: {updated}, Skipped: {skipped}, Failed: {failed}")
