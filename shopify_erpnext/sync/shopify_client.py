@@ -152,4 +152,5 @@ def set_inventory_level(location_id: int, inventory_item_id: int, quantity: int)
         "inventory_item_id": inventory_item_id,
         "available": int(quantity),
     }, timeout=30)
-    response.raise_for_status()
+    if not response.ok:
+        raise Exception(f"{response.status_code} - {response.text[:300]}")
