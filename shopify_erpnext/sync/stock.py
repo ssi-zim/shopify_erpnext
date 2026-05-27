@@ -6,6 +6,7 @@ Only unit items are synced (bundles show 0 in ERPNext Bin and are skipped).
 Only active Shopify products with inventory tracking enabled are updated.
 """
 
+import time
 import frappe
 from shopify_erpnext.sync import shopify_client
 
@@ -53,5 +54,6 @@ def sync_stock():
         except Exception as e:
             frappe.log_error(title="Shopify Stock Sync Error", message=f"Failed to set inventory for SKU {sku}: {e}")
             failed += 1
+        time.sleep(0.5)
 
     frappe.log_error(title="Shopify Stock Sync Complete", message=f"Updated: {updated}, Skipped: {skipped}, Failed: {failed}")

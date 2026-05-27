@@ -5,6 +5,7 @@ Sync item prices from ERPNext (Standard Selling) to Shopify product variants.
 Only active Shopify products are updated.
 """
 
+import time
 import frappe
 from shopify_erpnext.sync import shopify_client
 
@@ -46,5 +47,6 @@ def sync_prices():
         except Exception as e:
             frappe.log_error(title="Shopify Price Sync Error", message=f"Failed to update SKU {sku}: {e}")
             failed += 1
+        time.sleep(0.5)
 
     frappe.log_error(title="Shopify Price Sync Complete", message=f"Updated: {updated}, Skipped: {skipped}, Failed: {failed}")
