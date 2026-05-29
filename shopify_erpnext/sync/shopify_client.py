@@ -104,13 +104,14 @@ def update_variant_price(variant_id: int, price: float) -> None:
 # ── Inventory / Stock ─────────────────────────────────────────────────────────
 
 def get_location_id() -> int:
-    """Return the first Shopify location ID."""
+    """Return the first active Shopify location ID."""
     response = requests.get(f"{_base_url()}/locations.json", headers=_headers(), timeout=30)
     response.raise_for_status()
     locations = response.json().get("locations", [])
-    if not locations:
-        raise Exception("No locations found in Shopify.")
-    location = locations[0]
+    active = [loc for loc in locations if loc.get("active")]
+    if not active:
+        raise Exception("No active locations found in Shopify.")
+    location = active[0]
     frappe.logger().info(f"Using Shopify location: {location['name']} (ID: {location['id']})")
     return location["id"]
 
