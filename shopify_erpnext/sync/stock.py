@@ -54,6 +54,6 @@ def sync_stock():
         except Exception as e:
             frappe.log_error(title="Shopify Stock Sync Error", message=f"Failed to set inventory for SKU {sku}: {e}")
             failed += 1
-        time.sleep(0.5)
+        time.sleep(1)
 
     frappe.log_error(title="Shopify Stock Sync Complete", message=f"Updated: {updated}, Skipped: {skipped}, Failed: {failed}")

@@ -47,6 +47,6 @@ def sync_prices():
         except Exception as e:
             frappe.log_error(title="Shopify Price Sync Error", message=f"Failed to update SKU {sku}: {e}")
             failed += 1
-        time.sleep(0.5)
+        time.sleep(1)
 
     frappe.log_error(title="Shopify Price Sync Complete", message=f"Updated: {updated}, Skipped: {skipped}, Failed: {failed}")
