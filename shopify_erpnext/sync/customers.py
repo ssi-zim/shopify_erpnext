@@ -56,10 +56,20 @@ def get_or_create_customer(order: dict) -> str | None:
         )
         return None
 
-    # Check if customer already exists by normalized phone
-    existing = frappe.db.get_value("Customer", {"mobile_no": phone}, "name")
-    if existing:
-        return existing
+    # Search using multiple formats to catch customers saved in different formats
+    # e.g. +263773123456 / +0773123456 / 0773123456 / 263773123456
+    local = phone[4:] if phone.startswith("+263") else phone  # e.g. 773123456
+    formats_to_try = [
+        phone,                  # +263773123456 (normalized)
+        "+0" + local,           # +0773123456 (old wrong format)
+        "0" + local,            # 0773123456 (local without +)
+        "263" + local,          # 263773123456 (country code, no +)
+    ]
+
+    for p in formats_to_try:
+        existing = frappe.db.get_value("Customer", {"mobile_no": p}, "name")
+        if existing:
+            return existing
 
     # Build customer name
     first = (customer_data.get("first_name") or "").strip()
