@@ -15,10 +15,31 @@ def _extract_phone(order: dict) -> str:
         (order.get("billing_address") or {}).get("phone") or
         (order.get("shipping_address") or {}).get("phone") or ""
     )
-    phone = str(phone).strip().replace(" ", "").replace("-", "")
-    if phone and not phone.startswith("+"):
-        phone = "+" + phone
-    return phone
+    return _normalize_phone(str(phone))
+
+
+def _normalize_phone(phone: str) -> str:
+    """
+    Normalize all phone numbers to international Zimbabwe format: +263XXXXXXXXX
+    Handles:
+      0773123456    → +263773123456
+      263773123456  → +263773123456
+      +263773123456 → +263773123456
+    """
+    phone = phone.strip().replace(" ", "").replace("-", "")
+    if not phone:
+        return ""
+
+    # Remove leading + for uniform processing
+    if phone.startswith("+"):
+        phone = phone[1:]
+
+    # Local Zimbabwe format: starts with 0
+    if phone.startswith("0"):
+        phone = "263" + phone[1:]
+
+    # Add + prefix
+    return "+" + phone
 
 
 def get_or_create_customer(order: dict) -> str | None:
@@ -35,18 +56,10 @@ def get_or_create_customer(order: dict) -> str | None:
         )
         return None
 
-    # Check if customer already exists — try multiple phone formats
-    # because some customers may have been stored without the + prefix
-    phones_to_try = [phone]
-    if phone.startswith("+"):
-        phones_to_try.append(phone[1:])  # without +
-    else:
-        phones_to_try.append("+" + phone)  # with +
-
-    for p in phones_to_try:
-        existing = frappe.db.get_value("Customer", {"mobile_no": p}, "name")
-        if existing:
-            return existing
+    # Check if customer already exists by normalized phone
+    existing = frappe.db.get_value("Customer", {"mobile_no": phone}, "name")
+    if existing:
+        return existing
 
     # Build customer name
     first = (customer_data.get("first_name") or "").strip()
