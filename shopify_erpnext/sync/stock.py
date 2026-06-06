@@ -20,6 +20,13 @@ def sync_stock():
     frappe.logger().info("ERPNext -> Shopify Stock Sync Started")
     updated = skipped = failed = 0
 
+    # Get all Product Bundle item codes — these don't maintain their own stock
+    # and must not override Shopify's bundle stock calculation
+    bundle_items = {
+        b["new_item_code"]
+        for b in frappe.get_all("Product Bundle", fields=["new_item_code"])
+    }
+
     # Fetch projected stock directly from ERPNext database
     bins = frappe.get_all(
         "Bin",
@@ -29,9 +36,11 @@ def sync_stock():
     )
 
     # Cap projected_qty at 0 — never send negative stock to Shopify
+    # Exclude Product Bundle items — their stock is derived from unit items
     stock_map = {
         b["item_code"]: max(0, float(b.get("projected_qty") or 0))
         for b in bins
+        if b["item_code"] not in bundle_items
     }
     frappe.logger().info(f"Fetched stock levels for {len(stock_map)} items from ERPNext ({settings.warehouse}).")
 
